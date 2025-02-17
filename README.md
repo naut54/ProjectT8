@@ -34,7 +34,7 @@ ProjectT8 is a Java-based desktop application for product inventory management, 
   - Responsive design
 
 ## System Requirements
-- Java Runtime Environment (JRE) 8 or higher
+- Java Runtime Environment (JRE) 16 or higher
 - Minimum 2GB RAM
 - Windows/Linux/macOS operating system
 - Screen resolution: 1024x768 or higher
@@ -102,7 +102,6 @@ ProjectT8/
 5. Create a new Pull Request
 
 ## Support
-- Check the [documentation](docs/) for detailed information
 - Submit bug reports and feature requests through the issue tracker
 - Contact support at: support@projectt8.com
 
