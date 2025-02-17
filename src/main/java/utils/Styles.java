@@ -142,6 +142,7 @@ public class Styles {
         header.setBorder(BorderFactory.createEmptyBorder());
 
         table.getTableHeader().setReorderingAllowed(false);
+        table.setAutoCreateRowSorter(true);
         header.setPreferredSize(new Dimension(header.getWidth(), 30));
     }
 

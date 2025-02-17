@@ -9,11 +9,37 @@ public class Sale {
     private int idVenta;
     private int idProducto;
     private int iCantidad;
+    private double total;
 
-    public Sale(int idVenta, int idProducto, int iCantidad) {
+    /**
+     * Constructor de la clase Sale.
+     * Crea una nueva venta con el ID de la venta, el ID del producto,
+     * la cantidad vendida y el monto total de la venta.
+     *
+     * @param idVenta    El ID único de la venta.
+     * @param idProducto El ID del producto asociado a la venta.
+     * @param iCantidad  La cantidad de unidades vendidas.
+     * @param total      El monto total de la venta.
+     */
+    public Sale(int idVenta, int idProducto, int iCantidad, double total) {
         this.idVenta = idVenta;
         this.idProducto = idProducto;
         this.iCantidad = iCantidad;
+        this.total = total;
+    }
+
+    /**
+     * Constructor de la clase Sale.
+     * Crea una nueva venta con el ID del producto, la cantidad y el total.
+     *
+     * @param idProducto El ID del producto asociado a la venta.
+     * @param iCantidad  La cantidad de unidades vendidas.
+     * @param total      El monto total de la venta.
+     */
+    public Sale(int idProducto, int iCantidad, double total) {
+        this.idProducto = idProducto;
+        this.iCantidad = iCantidad;
+        this.total = total;
     }
 
     public int getIdVenta() {
@@ -68,6 +94,16 @@ public class Sale {
         };
         DataAccessObject.executeQueryValues("INSERT INTO ventas_tbl (`idVenta`, `idProducto`, `iCantidad`) VALUES (?, ?, ?)", values1);
         DataAccessObject.executeQueryValues("INSERT INTO detalle_ventas_tbl (`idVenta`, `idProducto`, `iCantidad`, `dPrecioUnitario`, `dTotal` VALUES (?, ?, ?, ?, ?))", values2);
+    }
+
+    public static void removeSale(int id) throws SQLException {
+        ArrayList<String> values = new ArrayList<>(){
+            {
+                add(id+"");
+            }};
+        String res = DataAccessObject.executeQueryValues("DELETE FROM detalle_ventas_tbl WHERE idVenta = ?", values);
+        res = DataAccessObject.executeQueryValues("DELETE FROM ventas_tbl WHERE idVenta = ?", values);
+        ArrayList<String> item = new ArrayList<>();
     }
 
     public static ArrayList<String> getSalesHistory() throws SQLException {

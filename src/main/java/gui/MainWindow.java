@@ -31,6 +31,7 @@ public class MainWindow extends JFrame {
         contentPanel.add(new ProductPanel(this), "products");
         contentPanel.add(new AddProduct(this), "addProduct");
         contentPanel.add(new EditProduct(this), "editProduct");
+        contentPanel.add(new SalesPanel(this), "salesPanel");
 
         cardLayout.show(contentPanel, "main");
         pack();
