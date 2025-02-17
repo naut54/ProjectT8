@@ -9,19 +9,22 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static utils.Styles.createStyledButton;
 
 public class SalesPanel extends JPanel {
     private final String[] columnNames = {
-            "Código", "Nombre", "Descripcion", "Precio", "Categoria", "Estado", "Stock"
+            "Código Venta", "Fecha", "Cantidad"
     };
+    private final Font FONT = new Font("Arial", Font.PLAIN, 14);
     private JPanel backPanel;
     private String query = "";
     private JPanel searchPanel;
     private JPanel quickAccessPanel;
     private JPanel productDetailsPanel;
     private final Color MENU_COLOR = new Color(52, 73, 94);
+    private final Color FONT_COLOR = new Color(255, 255, 255);
     private DefaultTableModel model = new DefaultTableModel();
     private JTable table;
     private final MainWindow mainWindow;
@@ -107,8 +110,25 @@ public class SalesPanel extends JPanel {
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(false);
         JTableHeader header = table.getTableHeader();
-        utils.Styles.setTableStyle(table, header, MENU_COLOR);
-        utils.Styles.setRowStyle(table);
+        utils.Styles.setTableStyle(table, header,
+                MENU_COLOR,
+                FONT_COLOR,
+                new Font("Arial", Font.BOLD, 14),
+                30,
+                SwingConstants.CENTER
+        );
+
+        utils.Styles.setRowStyle(table,
+                Color.WHITE,
+                new Color(245, 245, 245),
+                new Color(40, 167, 69),
+                new Color(220, 53, 69),
+                Color.BLACK,
+                40,
+                new Color(230, 230, 230),
+                2,
+                SwingConstants.CENTER
+        );
         table.getTableHeader().setReorderingAllowed(false);
 
         table.getSelectionModel().addListSelectionListener(e -> {
@@ -189,26 +209,32 @@ public class SalesPanel extends JPanel {
     private Object[][] convertStringToArray(String data) {
         try {
             String[] rows = data.split("\n");
+            System.out.println( Arrays.toString(rows));
+
+            rows = Arrays.stream(rows)
+                    .map(String::trim)
+                    .filter(row -> !row.isEmpty())
+                    .toArray(String[]::new);
+
             Object[][] result = new Object[rows.length][3];
 
             for (int i = 0; i < rows.length; i++) {
-                String[] columns = rows[i].trim().split("\\s+", 3);
+                String[] columns = rows[i].split("\\s+", 3);
 
                 if (columns.length < 3) {
-                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1));
+                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1) + ": " + Arrays.toString(columns));
                 }
 
-                try {
-                    result[i][0] = columns[0];
-                    result[i][1] = columns[1];
-                    result[i][2] = columns[2];
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Error procesando la fila " + (i+1) + ": " + e.getMessage());
-                }
+                result[i][0] = columns[0];
+                result[i][1] = columns[1];
+                result[i][2] = columns[2];
             }
+
             return result;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Error en el formato de los números: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error inesperado al procesar los datos: " + e.getMessage(), e);
         }
     }
 

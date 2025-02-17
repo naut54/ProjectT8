@@ -75,25 +75,77 @@ public class Sale {
                 '}';
     }
 
-    public static void recordSale(Sale sale) throws SQLException {
-        ArrayList<String> values1 = new ArrayList<>(){
-            {
-                add(sale.getIdVenta()+"");
-                add(sale.getIdProducto()+"");
-                add(sale.getiCantidad()+"");
+    public static boolean recordSale(ArrayList<Sale> sales) throws SQLException {
+        try {
+            for (Sale sale : sales) {
+                ArrayList<String> paramsStock = new ArrayList<>();
+                paramsStock.add(String.valueOf(sale.getIdProducto()));
+
+                int stockActual = DataAccessObject.executeSingleIntQuery(
+                        "SELECT iCantidad FROM stock_tbl WHERE idProducto = ?",
+                        paramsStock
+                );
+
+                if (stockActual < sale.getiCantidad()) {
+                    throw new SQLException("Stock insuficiente para el producto ID: " + sale.getIdProducto());
+                }
             }
-        };
-        ArrayList<String> values2 = new ArrayList<>(){
-            {
-                add(sale.getIdVenta()+"");
-                add(sale.getIdProducto()+"");
-                add(sale.getiCantidad()+"");
-                add(Product.getItemsDetails(sale.getIdProducto()).getFirst());
-                add(sale.getiCantidad()*Double.parseDouble(Product.getItemsDetails(sale.getIdProducto()).getFirst())+"");
+
+            double totalVenta = 0;
+
+            for (Sale sale : sales) {
+                ArrayList<String> paramsProduct = new ArrayList<>();
+                paramsProduct.add(String.valueOf(sale.getIdProducto()));
+                String precio = Product.getItemsDetails(sale.getIdProducto()).getFirst();
+                totalVenta += Double.parseDouble(precio) * sale.getiCantidad();
             }
-        };
-        DataAccessObject.executeQueryValues("INSERT INTO ventas_tbl (`idVenta`, `idProducto`, `iCantidad`) VALUES (?, ?, ?)", values1);
-        DataAccessObject.executeQueryValues("INSERT INTO detalle_ventas_tbl (`idVenta`, `idProducto`, `iCantidad`, `dPrecioUnitario`, `dTotal` VALUES (?, ?, ?, ?, ?))", values2);
+
+            ArrayList<String> columnasVenta = new ArrayList<>();
+            ArrayList<String> valoresVenta = new ArrayList<>();
+
+            columnasVenta.add("dTotal");
+            valoresVenta.add(String.valueOf(totalVenta));
+
+            DataAccessObject.executeInsert(columnasVenta, valoresVenta, "ventas_tbl");
+
+            int idVenta = DataAccessObject.executeSingleIntQuery(
+                    "SELECT MAX(idVenta) FROM ventas_tbl",
+                    new ArrayList<>()
+            );
+
+            for (Sale sale : sales) {
+                ArrayList<String> columnasDetalle = new ArrayList<>();
+                ArrayList<String> valoresDetalle = new ArrayList<>();
+
+                columnasDetalle.add("idVenta");
+                columnasDetalle.add("idProducto");
+                columnasDetalle.add("iCantidad");
+                columnasDetalle.add("dPrecio");
+
+                String precioUnitario = Product.getItemsDetails(sale.getIdProducto()).getFirst();
+
+                valoresDetalle.add(String.valueOf(idVenta));
+                valoresDetalle.add(String.valueOf(sale.getIdProducto()));
+                valoresDetalle.add(String.valueOf(sale.getiCantidad()));
+                valoresDetalle.add(precioUnitario);
+
+                DataAccessObject.executeInsert(columnasDetalle, valoresDetalle, "detalle_ventas_tbl");
+
+                ArrayList<String> paramsUpdate = new ArrayList<>();
+                paramsUpdate.add(String.valueOf(sale.getiCantidad()));
+                paramsUpdate.add(String.valueOf(sale.getIdProducto()));
+
+                DataAccessObject.executeQueryValues(
+                        "UPDATE stock_tbl SET iCantidad = iCantidad - ? WHERE idProducto = ?",
+                        paramsUpdate
+                );
+            }
+
+            return true;
+
+        } catch (SQLException e) {
+            throw new SQLException("Error al procesar la venta: " + e.getMessage());
+        }
     }
 
     public static void removeSale(int id) throws SQLException {
@@ -134,7 +186,7 @@ public class Sale {
         ArrayList<String> values = new ArrayList<>(){
             {
                 add("idVenta");
-                add("sFecha");
+                add("dFecha");
                 add("dTotal");
             }
         };

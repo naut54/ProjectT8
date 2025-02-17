@@ -106,31 +106,43 @@ public class Styles {
     }
 
     /**
-     * Aplica un estilo personalizado a una tabla y a su cabecera.
+     * Aplica un estilo personalizado al encabezado de una tabla (JTable).
      *
-     * @param table  La tabla a la que se aplicará el estilo.
-     * @param header La cabecera de la tabla a la que se aplicará el estilo.
-     * @param color  El color de fondo que se aplicará a la cabecera de la tabla.
-     *
+     * @param table           La tabla a la que se le aplicará el estilo.
+     * @param header          El encabezado de la tabla.
+     * @param backgroundColor El color de fondo del encabezado.
+     * @param foregroundColor El color del texto del encabezado.
+     * @param font            La fuente utilizada para el texto del encabezado.
+     * @param headerHeight    La altura preferida para el encabezado.
+     * @param alignment       La alineación horizontal del texto dentro de las celdas del encabezado.
      * @since 16
      */
-    public static void setTableStyle(JTable table, JTableHeader header, Color color) {
-        header.setBackground(color);
-        header.setForeground(Color.WHITE);
+    public static void setTableStyle(JTable table, JTableHeader header,
+                                     Color backgroundColor, Color foregroundColor,
+                                     Font font, int headerHeight, int alignment) {
+        header.setBackground(backgroundColor);
+        header.setForeground(foregroundColor);
 
         DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+                                                           boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value,
                         isSelected, hasFocus, row, column);
 
-                setHorizontalAlignment(SwingConstants.CENTER);
-                setBorder(BorderFactory.createEmptyBorder());
-                setBackground(color);
-                setForeground(Color.WHITE);
+                // Verifica si la alineación es válida
+                if (alignment == SwingConstants.LEFT || alignment == SwingConstants.CENTER || alignment == SwingConstants.RIGHT) {
+                    setHorizontalAlignment(alignment);
+                } else {
+                    // Usa una alineación predeterminada en caso de valor inválido
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                }
 
-                setFont(new Font("Arial", Font.BOLD, 14));
+                setBorder(BorderFactory.createEmptyBorder());
+                setBackground(backgroundColor);
+                setForeground(foregroundColor);
+                setFont(font);
 
                 return c;
             }
@@ -143,23 +155,66 @@ public class Styles {
 
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoCreateRowSorter(true);
-        header.setPreferredSize(new Dimension(header.getWidth(), 30));
+        header.setPreferredSize(new Dimension(header.getWidth(), headerHeight));
     }
 
     /**
-     * Aplica un estilo personalizado a las filas de una tabla (JTable).
-     * Establece un renderer para las celdas, define la altura de las filas
-     * y elimina las líneas de separación entre celdas.
+     * Aplica un estilo personalizado a las filas de una tabla (JTable) con características específicas:
+     * <ul>
+     *     <li>Colores alternados para filas pares e impares.</li>
+     *     <li>Colores personalizados para texto según el valor en una columna de estado específica.</li>
+     *     <li>Altura personalizada para cada fila de la tabla.</li>
+     *     <li>Estilo de borde para las celdas de la tabla.</li>
+     * </ul>
      *
-     * @param table La tabla a la que se le aplicará el estilo de filas.
-     *
+     * @param table             La tabla (JTable) a la que se aplicará el estilo.
+     * @param evenRowColor      El color de fondo para las filas pares.
+     * @param oddRowColor       El color de fondo para las filas impares.
+     * @param activeTextColor   El color del texto cuando el estado es "Activo".
+     * @param inactiveTextColor El color del texto cuando el estado es "Inactivo".
+     * @param defaultTextColor  El color del texto para el resto de celdas.
+     * @param rowHeight         La altura personalizada para las filas.
+     * @param borderColor       El color del borde de las celdas.
+     * @param statusColumn      El índice de la columna que representa el estado (para aplicar colores de texto).
+     * @param alignment         Alineación horizontal del texto en las celdas.
      * @since 16
      */
-    public static void setRowStyle(JTable table) {
-        CustomTableCellRenderer renderer = new CustomTableCellRenderer();
-        table.setDefaultRenderer(Object.class, renderer);
+    public static void setRowStyle(JTable table, Color evenRowColor, Color oddRowColor,
+                                   Color activeTextColor, Color inactiveTextColor,
+                                   Color defaultTextColor, int rowHeight,
+                                   Color borderColor, int statusColumn, int alignment) {
 
-        table.setRowHeight(40);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value,
+                        isSelected, hasFocus, row, column);
+
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? evenRowColor : oddRowColor);
+
+                    if (column == statusColumn && value != null) {
+                        String estado = value.toString();
+                        setForeground(estado.equalsIgnoreCase("Activo") ?
+                                activeTextColor :
+                                estado.equalsIgnoreCase("Inactivo") ?
+                                        inactiveTextColor : defaultTextColor);
+                    } else {
+                        setForeground(defaultTextColor);
+                    }
+                }
+
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, borderColor));
+                setHorizontalAlignment(alignment);
+
+                return c;
+            }
+        };
+
+        table.setDefaultRenderer(Object.class, renderer);
+        table.setRowHeight(rowHeight);
         table.setShowHorizontalLines(false);
         table.setShowVerticalLines(false);
         table.setIntercellSpacing(new Dimension(0, 0));

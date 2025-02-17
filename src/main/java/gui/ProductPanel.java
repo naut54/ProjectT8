@@ -15,12 +15,14 @@ public class ProductPanel extends JPanel {
     private final String[] columnNames = {
             "Código", "Nombre", "Descripcion", "Precio", "Categoria", "Estado", "Stock"
     };
+    private final Font FONT = new Font("Arial", Font.PLAIN, 14);
     private JPanel backPanel;
     private String query = "";
     private JPanel searchPanel;
     private JPanel quickAccessPanel;
     private JPanel productDetailsPanel;
     private final Color MENU_COLOR = new Color(52, 73, 94);
+    private final Color FONT_COLOR = new Color(255, 255, 255);
     private DefaultTableModel model = new DefaultTableModel();
     private JTable table;
     private final MainWindow mainWindow;
@@ -222,8 +224,25 @@ public class ProductPanel extends JPanel {
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(false);
         JTableHeader header = table.getTableHeader();
-        utils.Styles.setTableStyle(table, header, MENU_COLOR);
-        utils.Styles.setRowStyle(table);
+        utils.Styles.setTableStyle(table, header,
+                MENU_COLOR,                    // backgroundColor
+                FONT_COLOR,                    // foregroundColor
+                new Font("Arial", Font.BOLD, 14), // font
+                30,                            // headerHeight
+                SwingConstants.CENTER          // alignment
+        );
+
+        utils.Styles.setRowStyle(table,
+                Color.WHITE,                   // evenRowColor
+                new Color(245, 245, 245),     // oddRowColor
+                new Color(40, 167, 69),       // activeTextColor
+                new Color(220, 53, 69),       // inactiveTextColor
+                Color.BLACK,                   // defaultTextColor
+                40,                           // rowHeight
+                new Color(230, 230, 230),     // borderColor
+                6,                            // statusColumn (la columna "Estado" es la 6)
+                SwingConstants.CENTER         // alignment
+        );
         table.getTableHeader().setReorderingAllowed(false);
 
         table.getSelectionModel().addListSelectionListener(e -> {
