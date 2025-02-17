@@ -237,8 +237,7 @@ public class Styles {
      */
     static class CustomTableCellRenderer extends DefaultTableCellRenderer {
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             JLabel label = (JLabel) super.getTableCellRendererComponent(
@@ -250,7 +249,7 @@ public class Styles {
                 c.setBackground(new Color(245, 245, 245));
             }
 
-            if (column == 5) {
+            if (column == 6) {
                 String estado = value.toString();
                 if (estado.equalsIgnoreCase("Activo")) {
                     setForeground(new Color(40, 167, 69));

@@ -47,7 +47,7 @@ public class ProductPanel extends JPanel {
         try {
             createProductDetailsPanel(new Object[][]{});
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         updateList(query);
     }
@@ -248,7 +248,7 @@ public class ProductPanel extends JPanel {
         productDetailsPanel.add(scrollPane, gbc);
     }
 
-    public Object[][] convertStringToArray(String data) {
+    private Object[][] convertStringToArray(String data) {
         try {
             String[] rows = data.split("\n");
             Object[][] result = new Object[rows.length][8];

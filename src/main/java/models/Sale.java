@@ -130,5 +130,14 @@ public class Sale {
         return item;
     }
 
-    
+    public static String searchSale(String query) throws SQLException {
+        ArrayList<String> values = new ArrayList<>(){
+            {
+                add("idVenta");
+                add("sFecha");
+                add("dTotal");
+            }
+        };
+        return DataAccessObject.executeQueryValuesLike("ventas_tbl", values, query);
+    }
 }

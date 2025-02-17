@@ -44,6 +44,12 @@ public class SalesPanel extends JPanel {
     private void createPanels() {
         createGoBackButton();
         createSearchPanel();
+        try {
+            createSalesDetailsPanel(new Object[][]{});
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        updateList(query);
     }
 
     private void createGoBackButton() {
@@ -85,97 +91,11 @@ public class SalesPanel extends JPanel {
         add(searchPanel, gbc);
     }
 
-    private void createQuickAccessPanel() {
-        quickAccessPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        Sale data = getSelectedSale();
-
-        Object[][] buttonConfigs = {
-                {"Nuevo Producto", (Runnable) () -> mainWindow.showPanel("addProduct")},
-                {"Modificar Producto", (Runnable) () -> {
-                    Sale selectedSale = getSelectedSale();
-                    if (selectedSale == null) {
-                        JOptionPane.showMessageDialog(this,
-                                "Por favor, seleccione un producto primero",
-                                "Advertencia",
-                                JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        mainWindow.showPanel("editProduct", selectedSale);
-                    }
-                }},
-                {"Eliminar Producto", (Runnable) () -> {
-                    try {
-                        deleteSelectedSale();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }},
-                {"Actualizar Lista", (Runnable) () -> updateList("")}
-        };
-    }
-
-    private Sale getSelectedSale() {
-        if (table == null || table.getRowCount() == 0) {
-            return null;
-        }
-
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            return null;
-        }
-
-        try {
-            int codigo = (int) table.getValueAt(selectedRow, 0);
-            int cantidad = Integer.parseInt(table.getValueAt(selectedRow, 1).toString());
-            double precio = Double.parseDouble(table.getValueAt(selectedRow, 2).toString());
-
-            return new Sale(codigo, cantidad, precio);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void deleteSelectedSale() throws SQLException {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            Object value = model.getValueAt(selectedRow, 0);
-            try {
-                int saleId = Integer.parseInt(value.toString());
-
-                int confirm = JOptionPane.showConfirmDialog(this,"¿Esta seguro?", "¿Eliminar?" , JOptionPane.YES_NO_CANCEL_OPTION);
-
-                if (confirm == JOptionPane.YES_OPTION) {
-                    Sale.removeSale(saleId);
-                    updateList(query);
-                    JOptionPane.showMessageDialog(null, "Producto eliminado con exito");
-                } else if (confirm == JOptionPane.NO_OPTION) {
-                    JOptionPane.showMessageDialog(null, "Operacion Cancelada");
-                } else if (confirm == JOptionPane.CLOSED_OPTION) {
-                    JOptionPane.showMessageDialog(null, "Operacion Cancelada");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar producto");
-                    throw new RuntimeException("Error al eliminar producto");
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this,
-                        "El valor en la columna 'Código' no es un número válido: " + value,
-                        "Error de tipo",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Por favor, seleccione un producto antes de eliminar.",
-                    "Advertencia",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    private void createProductDetailsPanel(Object[][] data) throws SQLException {
+    private void createSalesDetailsPanel(Object[][] data) throws SQLException {
         productDetailsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        this.model = new DefaultTableModel(columnNames, 0){
+         this.model = new DefaultTableModel(columnNames, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -213,39 +133,32 @@ public class SalesPanel extends JPanel {
         productDetailsPanel.add(scrollPane, gbc);
     }
 
-    public Object[][] convertStringToArray(String data) {
+    private Sale getSelectedSale() {
+        if (table == null || table.getRowCount() == 0) {
+            return null;
+        }
+
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            return null;
+        }
+
         try {
-            String[] rows = data.split("\n");
-            Object[][] result = new Object[rows.length][8];
+            int code = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
+            int quantity = Integer.parseInt(table.getValueAt(selectedRow, 1).toString());
+            double total = Double.parseDouble(table.getValueAt(selectedRow, 3).toString());
 
-            for (int i = 0; i < rows.length; i++) {
-                String[] columns = rows[i].trim().split("\\s+", 7);
-
-                if (columns.length < 5) {
-                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1));
-                }
-
-                try {
-                    result[i][0] = columns[4];
-                    result[i][1] = columns[1];
-                    result[i][2] = columns[2];
-                    result[i][3] = Double.parseDouble(columns[3]);
-                    result[i][4] = columns[5];
-                    result[i][5] = Product.checkStatus(columns[4]);
-                    result[i][6] = 0;
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Error procesando la fila " + (i+1) + ": " + e.getMessage());
-                }
-            }
-            return result;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Error en el formato de los números: " + e.getMessage());
+            return new Sale(code, quantity, total);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     private void updateList(String query) {
         try {
-            String searchResults = Product.searchItemByName(query);
+            String searchResults = Sale.searchSale(query);
+            System.out.println(searchResults);
 
             if (searchResults.trim().isEmpty()) {
                 model.setRowCount(0);
@@ -273,6 +186,32 @@ public class SalesPanel extends JPanel {
         }
     }
 
+    private Object[][] convertStringToArray(String data) {
+        try {
+            String[] rows = data.split("\n");
+            Object[][] result = new Object[rows.length][3];
+
+            for (int i = 0; i < rows.length; i++) {
+                String[] columns = rows[i].trim().split("\\s+", 3);
+
+                if (columns.length < 3) {
+                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1));
+                }
+
+                try {
+                    result[i][0] = columns[0];
+                    result[i][1] = columns[1];
+                    result[i][2] = columns[2];
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Error procesando la fila " + (i+1) + ": " + e.getMessage());
+                }
+            }
+            return result;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Error en el formato de los números: " + e.getMessage());
+        }
+    }
+
     private void layoutComponents() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -289,11 +228,8 @@ public class SalesPanel extends JPanel {
         add(searchPanel, gbc);
 
         gbc.gridy = 2;
+        gbc.weightx = 1.0;
         gbc.weighty = 0.8;
-        add(quickAccessPanel, gbc);
-
-        gbc.gridy = 3;
-        gbc.weighty = 1.0;
         add(productDetailsPanel, gbc);
     }
 

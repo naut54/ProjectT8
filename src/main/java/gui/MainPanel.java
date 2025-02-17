@@ -73,7 +73,7 @@ public class MainPanel extends JPanel {
 
         Object[][] quickAccessButtons = {
                 {"Nuevo Producto", (Runnable) () -> mainWindow.showPanel("addProduct")},
-                {"Nueva Venta", (Runnable) () -> mainWindow.showPanel("addProduct")},
+                {"Nueva Venta", (Runnable) () -> mainWindow.showPanel("addSale")},
                 {"Generar Factura", (Runnable) () -> mainWindow.showPanel("addProduct")},
                 {"Actualizar Stock", (Runnable) () -> mainWindow.showPanel("addProduct")},
                 {"Nueva Categoria", (Runnable) () -> mainWindow.showPanel("addProduct")},
@@ -188,14 +188,13 @@ public class MainPanel extends JPanel {
     private void handleModuleClick(String moduleName) {
         switch (moduleName) {
             case "Productos" -> {
-                System.out.println("Abriendo módulo de productos");
                 mainWindow.showPanel("products");
             }
             case "Stock" -> {
                 System.out.println("Abriendo módulo de stock");
             }
             case "Ventas" -> {
-                System.out.println("Abriendo módulo de ventas");
+                mainWindow.showPanel("salesPanel");
             }
             case "Categorías" -> {
                 System.out.println("Abriendo módulo de categorías");
