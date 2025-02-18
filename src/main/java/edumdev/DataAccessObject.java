@@ -246,4 +246,36 @@ public class DataAccessObject {
             throw new SQLException("Se produjo un error al ejecutar una consulta.", e);
         }
     }
+
+    /**
+     * Ejecuta una consulta SQL SELECT con parámetros especificados y recupera un único resultado de tipo double.
+     * La consulta debe devolver exactamente una fila con una única columna que pueda ser convertida a double.
+     *
+     * @param query  la consulta SQL a ejecutar, debe ser una instrucción SELECT.
+     * @param params una lista de parámetros que se sustituirán dinámicamente en la consulta.
+     * @return el valor double devuelto por la consulta.
+     * @throws SQLException si la consulta no es una instrucción SELECT, si devuelve múltiples filas,
+     *                      si el resultado no es un número válido o si ocurre un error al ejecutar la consulta.
+     */
+    public static double executeSingleDoubleQuery(String query, ArrayList<String> params) throws SQLException {
+        if (!query.trim().toUpperCase().startsWith("SELECT")) {
+            throw new SQLException("La consulta debe ser una instrucción SELECT. Consulta dada: " + query);
+        }
+
+        String result = executeQueryValues(query, params);
+
+        if (!result.isEmpty()) {
+            if (result.contains("\n")) {
+                throw new SQLException("Se devolvieron múltiples filas cuando se esperaba un único valor.");
+            }
+
+            try {
+                return Double.parseDouble(result.trim());
+            } catch (NumberFormatException e) {
+                throw new SQLException("El resultado no es un número válido: " + result, e);
+            }
+        }
+
+        throw new SQLException("No se encontró el resultado para la consulta: " + query);
+    }
 }

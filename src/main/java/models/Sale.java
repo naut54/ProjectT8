@@ -92,12 +92,16 @@ public class Sale {
             }
 
             double totalVenta = 0;
-
             for (Sale sale : sales) {
                 ArrayList<String> paramsProduct = new ArrayList<>();
                 paramsProduct.add(String.valueOf(sale.getIdProducto()));
-                String precio = Product.getItemsDetails(sale.getIdProducto()).getFirst();
-                totalVenta += Double.parseDouble(precio) * sale.getiCantidad();
+
+                double precioUnitario = DataAccessObject.executeSingleDoubleQuery(
+                        "SELECT dPrecio FROM productos_tbl WHERE idProducto = ?",
+                        paramsProduct
+                );
+
+                totalVenta += precioUnitario * sale.getiCantidad();
             }
 
             ArrayList<String> columnasVenta = new ArrayList<>();
@@ -114,6 +118,13 @@ public class Sale {
             );
 
             for (Sale sale : sales) {
+                ArrayList<String> paramsProduct = new ArrayList<>();
+                paramsProduct.add(String.valueOf(sale.getIdProducto()));
+                double precioUnitario = DataAccessObject.executeSingleDoubleQuery(
+                        "SELECT dPrecio FROM productos_tbl WHERE idProducto = ?",
+                        paramsProduct
+                );
+
                 ArrayList<String> columnasDetalle = new ArrayList<>();
                 ArrayList<String> valoresDetalle = new ArrayList<>();
 
@@ -122,12 +133,10 @@ public class Sale {
                 columnasDetalle.add("iCantidad");
                 columnasDetalle.add("dPrecio");
 
-                String precioUnitario = Product.getItemsDetails(sale.getIdProducto()).getFirst();
-
                 valoresDetalle.add(String.valueOf(idVenta));
                 valoresDetalle.add(String.valueOf(sale.getIdProducto()));
                 valoresDetalle.add(String.valueOf(sale.getiCantidad()));
-                valoresDetalle.add(precioUnitario);
+                valoresDetalle.add(String.valueOf(precioUnitario));
 
                 DataAccessObject.executeInsert(columnasDetalle, valoresDetalle, "detalle_ventas_tbl");
 
@@ -183,13 +192,30 @@ public class Sale {
     }
 
     public static String searchSale(String query) throws SQLException {
-        ArrayList<String> values = new ArrayList<>(){
-            {
-                add("idVenta");
-                add("sFecha");
-                add("dTotal");
-            }
-        };
-        return DataAccessObject.executeQueryValuesLike("ventas_tbl", values, query);
+        ArrayList<String> params = new ArrayList<>();
+        params.add("%" + query + "%");
+        params.add("%" + query + "%");
+        params.add("%" + query + "%");
+
+        String sqlQuery =
+                "SELECT DISTINCT " +
+                        "    v.idVenta, " +
+                        "    DATE_FORMAT(v.sFecha, '%Y-%m-%d') as sFecha, " +
+                        "    v.dTotal, " +
+                        "    COALESCE(SUM(d.iCantidad), 0) as totalCantidad " +
+                        "FROM " +
+                        "    ventas_tbl v " +
+                        "LEFT JOIN " +
+                        "    detalle_ventas_tbl d ON v.idVenta = d.idVenta " +
+                        "WHERE " +
+                        "    CAST(v.idVenta AS CHAR) LIKE ? OR " +
+                        "    v.sFecha LIKE ? OR " +
+                        "    CAST(v.dTotal AS CHAR) LIKE ? " +
+                        "GROUP BY " +
+                        "    v.idVenta, v.sFecha, v.dTotal";
+
+        String resultado = DataAccessObject.executeQueryValues(sqlQuery, params);
+        System.out.println("Resultado de la búsqueda: " + resultado);
+        return resultado;
     }
 }

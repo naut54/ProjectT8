@@ -22,9 +22,9 @@ public class MainWindow extends JFrame {
         setMinimumSize(new Dimension(800, 600));
         setResizable(false);
 
-        ImageIcon icon = new ImageIcon(getIconBytes());
-        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        setIconImage(image);
+//        ImageIcon icon = new ImageIcon(getIconBytes());
+//        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+//        setIconImage(image);
 
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);

@@ -3,6 +3,7 @@ package gui;
 import models.Product;
 import models.Sale;
 import utils.Styles;
+import utils.Validate;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,7 +16,7 @@ import static utils.Styles.createStyledButton;
 
 public class SalesPanel extends JPanel {
     private final String[] columnNames = {
-            "Código Venta", "Fecha", "Cantidad"
+            "Código Venta", "Fecha", "Cantidad", "Total"
     };
     private final Font FONT = new Font("Arial", Font.PLAIN, 14);
     private JPanel backPanel;
@@ -164,9 +165,21 @@ public class SalesPanel extends JPanel {
         }
 
         try {
-            int code = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
-            int quantity = Integer.parseInt(table.getValueAt(selectedRow, 1).toString());
-            double total = Double.parseDouble(table.getValueAt(selectedRow, 3).toString());
+            Object codeObj = table.getValueAt(selectedRow, 0);
+            Object quantityObj = table.getValueAt(selectedRow, 2);
+            Object totalObj = table.getValueAt(selectedRow, 3);
+
+            if (codeObj == null || quantityObj == null || totalObj == null) {
+                return null;
+            }
+
+            String codeStr = codeObj.toString();
+            String quantityStr = quantityObj.toString();
+            String totalStr = totalObj.toString();
+
+            int code = Validate.isNumeric(codeStr) ? Integer.parseInt(codeStr) : 0;
+            int quantity = Validate.isNumeric(quantityStr) ? Integer.parseInt(quantityStr) : 0;
+            double total = Validate.isNumeric(totalStr) ? Double.parseDouble(totalStr) : 0.0;
 
             return new Sale(code, quantity, total);
         } catch (Exception e) {
@@ -185,6 +198,8 @@ public class SalesPanel extends JPanel {
             }
 
             Object[][] data = convertStringToArray(searchResults);
+
+            System.out.println( Arrays.deepToString( data ));
 
             model.setRowCount(0);
             for (Object[] row : data) {
@@ -214,18 +229,32 @@ public class SalesPanel extends JPanel {
                     .filter(row -> !row.isEmpty())
                     .toArray(String[]::new);
 
-            Object[][] result = new Object[rows.length][3];
+            Object[][] result = new Object[rows.length][4];
 
             for (int i = 0; i < rows.length; i++) {
-                String[] columns = rows[i].split("\\s+", 3);
+                String row = rows[i];
 
-                if (columns.length < 3) {
-                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1) + ": " + Arrays.toString(columns));
+                String[] parts = row.split("\\s+");
+                if (parts.length < 4) {
+                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1) + ": " + Arrays.toString(parts));
                 }
 
-                result[i][0] = columns[0];
-                result[i][1] = columns[1];
-                result[i][2] = columns[2];
+                String codigo = parts[0];
+                String fecha = parts[1];
+                String cantidad = parts[2];
+                StringBuilder totalBuilder = new StringBuilder();
+                for (int j = 3; j < parts.length; j++) {
+                    totalBuilder.append(parts[j]);
+                    if (j + 1 < parts.length) {
+                        totalBuilder.append(" ");
+                    }
+                }
+                String total = totalBuilder.toString();
+
+                result[i][0] = codigo;
+                result[i][1] = fecha;
+                result[i][2] = cantidad;
+                result[i][3] = total;
             }
 
             return result;
