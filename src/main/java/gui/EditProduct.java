@@ -83,8 +83,8 @@ public class EditProduct extends JPanel {
         add(scrollPane, gbc);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton cancelButton = Styles.createStyledButton("Volver a Productos", new Color(108, 117, 125), 180, 40);
-        JButton saveButton = Styles.createStyledButton("Guardar Producto", MENU_COLOR, 180, 40);
+        JButton cancelButton = Styles.createStyledButton("Volver a Productos", new Color(108, 117, 125), 180, 40, new Color(70, 83, 97));
+        JButton saveButton = Styles.createStyledButton("Guardar Producto", MENU_COLOR, 180, 40, new Color(70, 83, 97));
 
         cancelButton.addActionListener(_ -> mainWindow.showPanel("products"));
         saveButton.addActionListener(_ -> {

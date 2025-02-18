@@ -92,7 +92,7 @@ public class MainPanel extends JPanel {
             String buttonTextValue = (String) buttonText[0];
             Runnable action = (Runnable) buttonText[1];
 
-            JButton button = createStyledButton(buttonTextValue, MENU_COLOR, 150, 60);
+            JButton button = createStyledButton(buttonTextValue, MENU_COLOR, 150, 60, new Color(70, 83, 97));
             button.addActionListener(e -> action.run());
 
             button.setCursor(new Cursor(Cursor.HAND_CURSOR));

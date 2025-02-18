@@ -59,7 +59,7 @@ public class SalesPanel extends JPanel {
         backPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JButton goBackButton = Styles.createStyledButton("Volver", MENU_COLOR, 100, 30);
+        JButton goBackButton = Styles.createStyledButton("Volver", MENU_COLOR, 100, 30, new Color(70, 83, 97));
         goBackButton.addActionListener(_ -> mainWindow.showPanel("main"));
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
@@ -78,7 +78,7 @@ public class SalesPanel extends JPanel {
         searchField.setToolTipText("Buscar producto por nombre");
         searchField.addActionListener(_ -> updateList(query = searchField.getText()));
 
-        JButton searchButton = Styles.createStyledButton("Buscar", MENU_COLOR, 100, 30);
+        JButton searchButton = Styles.createStyledButton("Buscar", MENU_COLOR, 100, 30, new Color(70, 83, 97));
         searchButton.setToolTipText("Buscar producto por nombre");
         searchButton.addActionListener(_ -> updateList(searchField.getText()));
 
@@ -178,7 +178,6 @@ public class SalesPanel extends JPanel {
     private void updateList(String query) {
         try {
             String searchResults = Sale.searchSale(query);
-            System.out.println(searchResults);
 
             if (searchResults.trim().isEmpty()) {
                 model.setRowCount(0);
@@ -209,7 +208,6 @@ public class SalesPanel extends JPanel {
     private Object[][] convertStringToArray(String data) {
         try {
             String[] rows = data.split("\n");
-            System.out.println( Arrays.toString(rows));
 
             rows = Arrays.stream(rows)
                     .map(String::trim)

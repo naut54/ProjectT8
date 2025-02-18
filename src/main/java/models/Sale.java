@@ -186,7 +186,7 @@ public class Sale {
         ArrayList<String> values = new ArrayList<>(){
             {
                 add("idVenta");
-                add("dFecha");
+                add("sFecha");
                 add("dTotal");
             }
         };

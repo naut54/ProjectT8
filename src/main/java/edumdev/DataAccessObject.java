@@ -224,4 +224,26 @@ public class DataAccessObject {
             throw e;
         }
     }
+
+    public static byte[] executeQueryBytes(String query) throws SQLException {
+        if (!query.trim().toUpperCase().startsWith("SELECT")) {
+            throw new SQLException("Este método solo admite consultas SELECT.");
+        }
+
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) {
+                throw new SQLException("No se pudo establecer una conexión con la base de datos.");
+            }
+            try (PreparedStatement pstmt = conn.prepareStatement(query);
+                 ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBytes("pixel");
+                }
+                throw new SQLException("No se encontró el icono en la base de datos.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error ejecutando la consulta: " + e.getMessage());
+            throw new SQLException("Se produjo un error al ejecutar una consulta.", e);
+        }
+    }
 }

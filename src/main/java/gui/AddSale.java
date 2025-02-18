@@ -4,7 +4,6 @@ import edumdev.DataAccessObject;
 import models.Product;
 import models.Sale;
 import utils.Styles;
-import utils.Validate;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -54,7 +53,7 @@ public class AddSale extends JPanel {
         searchField = new JTextField();
         Styles.setTextFieldsStyle(searchField, 300, 35);
         searchField.setPreferredSize(new Dimension(500, 35));
-        JButton addButton = Styles.createStyledButton("Agregar Producto", MENU_COLOR, 180, 35);
+        JButton addButton = Styles.createStyledButton("Agregar Producto", MENU_COLOR, 180, 35, new Color(70, 83, 97));
         searchPanel.add(searchField, BorderLayout.CENTER);
         searchPanel.add(addButton, BorderLayout.EAST);
         mainPanel.add(searchPanel, BorderLayout.NORTH);
@@ -75,7 +74,7 @@ public class AddSale extends JPanel {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        addButton.addActionListener(e -> buscarProducto());
+        addButton.addActionListener(e -> searchSale());
         setupTableStyles();
     }
 
@@ -89,22 +88,22 @@ public class AddSale extends JPanel {
         panel.add(summaryTitle);
         panel.add(Box.createVerticalStrut(20));
 
-        subtotalLabel = new JLabel("Subtotal: $0.00");
+        subtotalLabel = new JLabel("Subtotal: 0.00€");
         panel.add(subtotalLabel);
         panel.add(Box.createVerticalStrut(10));
 
-        ivaLabel = new JLabel("IVA (21%): $0.00");
+        ivaLabel = new JLabel("IVA (21%): 0.00€");
         panel.add(ivaLabel);
         panel.add(Box.createVerticalStrut(10));
 
-        totalLabel = new JLabel("Total: $0.00");
+        totalLabel = new JLabel("Total: 0.00€");
         totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
         panel.add(totalLabel);
         panel.add(Box.createVerticalStrut(30));
 
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 10));
-        JButton registerButton = Styles.createStyledButton("Registrar Venta", MENU_COLOR, 180, 40);
-        JButton cancelButton = Styles.createStyledButton("Cancelar", new Color(231, 76, 60), 180, 40);
+        JButton registerButton = Styles.createStyledButton("Registrar Venta", MENU_COLOR, 180, 10, new Color(70, 83, 97));
+        JButton cancelButton = Styles.createStyledButton("Cancelar", new Color(231, 76, 60), 180, 10, new Color(70, 83, 97));
 
         registerButton.addActionListener(e -> registrarVenta());
         cancelButton.addActionListener(e -> mainWindow.showPanel("ventas"));
@@ -142,7 +141,7 @@ public class AddSale extends JPanel {
         );
     }
 
-    private void buscarProducto() {
+    private void searchSale() {
         String searchTerm = searchField.getText().trim();
         if (searchTerm.isEmpty()) {
             showError("Ingrese un código o nombre de producto");
@@ -158,7 +157,7 @@ public class AddSale extends JPanel {
                 showError("No se encontró el producto");
                 return;
             }
-            agregarProductoATabla(result);
+            addSaleToTable(result);
         } catch (SQLException e) {
             showError("Error al buscar el producto: " + e.getMessage());
         }
@@ -171,22 +170,7 @@ public class AddSale extends JPanel {
                 JOptionPane.ERROR_MESSAGE);
     }
 
-    private void buscarProducto(String codigo) throws SQLException {
-        ArrayList<String> columns = new ArrayList<>();
-        columns.add("idProducto");
-        columns.add("sNombre");
-        columns.add("iCodigoProducto");
-        columns.add("dPrecio");
-
-        String result = DataAccessObject.executeQueryValuesLike("productos_tbl", columns, codigo);
-        if (!result.equals("Sin resultados")) {
-            agregarProductoATabla(result);
-        } else {
-            showError("Producto no encontrado");
-        }
-    }
-
-    private void agregarProductoATabla(String productoInfo) {
+    private void addSaleToTable(String productoInfo) {
         String[] datos = productoInfo.split(" ");
         Object[] row = new Object[]{
                 datos[1],
@@ -223,9 +207,9 @@ public class AddSale extends JPanel {
         iva = subtotal * 0.21;
         total = subtotal + iva;
 
-        subtotalLabel.setText(String.format("Subtotal: $%.2f", subtotal));
-        ivaLabel.setText(String.format("IVA (21%%): $%.2f", iva));
-        totalLabel.setText(String.format("Total: $%.2f", total));
+        subtotalLabel.setText(String.format("Subtotal: %.2f€", subtotal));
+        ivaLabel.setText(String.format("IVA (21%%): %.2f€", iva));
+        totalLabel.setText(String.format("Total: %.2f€", total));
     }
 
     private boolean validarStock(int idProducto, int cantidad) throws SQLException {

@@ -58,7 +58,7 @@ public class ProductPanel extends JPanel {
         backPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JButton goBackButton = Styles.createStyledButton("Volver", MENU_COLOR, 100, 30);
+        JButton goBackButton = Styles.createStyledButton("Volver", MENU_COLOR, 100, 30, new Color(70, 83, 97));
         goBackButton.addActionListener(_ -> mainWindow.showPanel("main"));
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
@@ -77,7 +77,7 @@ public class ProductPanel extends JPanel {
         searchField.setToolTipText("Buscar producto por nombre");
         searchField.addActionListener(_ -> updateList(query = searchField.getText()));
 
-        JButton searchButton = Styles.createStyledButton("Buscar", MENU_COLOR, 100, 30);
+        JButton searchButton = Styles.createStyledButton("Buscar", MENU_COLOR, 100, 30, new Color(70, 83, 97));
         searchButton.setToolTipText("Buscar producto por nombre");
         searchButton.addActionListener(_ -> updateList(searchField.getText()));
 
@@ -132,7 +132,7 @@ public class ProductPanel extends JPanel {
             String buttonText = (String) config[0];
             Runnable action = (Runnable) config[1];
 
-            JButton button = createStyledButton(buttonText, MENU_COLOR, 150, 60);
+            JButton button = createStyledButton(buttonText, MENU_COLOR, 150, 60, new Color(70, 83, 97));
             button.addActionListener(e -> action.run());
 
             gbc.gridx = col;

@@ -25,16 +25,16 @@ public class Styles {
      *
      * @since 16
      */
-    public static void setHoverButton(JButton btn) {
+    public static void setHoverButton(JButton btn, Color hoverColor, Color normalColor) {
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn.setBackground(new Color(70, 83, 97));
+                btn.setBackground(hoverColor);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn.setBackground(new Color(52, 73, 94));
+                btn.setBackground(normalColor);
             }
         });
     }
@@ -63,13 +63,13 @@ public class Styles {
      *
      * @since 16
      */
-    public static JButton createStyledButton(String text, Color color, int width, int height) {
+    public static JButton createStyledButton(String text, Color color, int width, int height, Color hoverColor) {
         JButton button = new JButton(text);
         button.setBackground(color);
         button.setForeground(Color.WHITE);
         try {
             setRoundedButton(button);
-            setHoverButton(button);
+            setHoverButton(button, hoverColor, color);
             button.setPreferredSize(new Dimension(width, height));
             button.setFont(new Font("Arial", Font.BOLD, 16));
         } catch (Exception e) {

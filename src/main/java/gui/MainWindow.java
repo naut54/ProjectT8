@@ -1,8 +1,11 @@
 package gui;
 
+import edumdev.DataAccessObject;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class MainWindow extends JFrame {
     private CardLayout cardLayout;
@@ -13,17 +16,31 @@ public class MainWindow extends JFrame {
         initializePanels();
     }
 
-    private void initializeFrame() {
+    private void initializeFrame() throws SQLException {
         setTitle("GestorT8");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(800, 600));
         setResizable(false);
+
+        ImageIcon icon = new ImageIcon(getIconBytes());
+        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        setIconImage(image);
 
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         setContentPane(contentPanel);
 
         setLocationRelativeTo(null);
+    }
+
+    private byte[] getIconBytes() throws SQLException {
+        try {
+            String query = "SELECT pixel FROM imagenes_tbl WHERE nombre LIKE 'icono'";
+
+            return DataAccessObject.executeQueryBytes(query);
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener el icono: " + e.getMessage());
+        }
     }
 
     private void initializePanels() throws SQLException {
