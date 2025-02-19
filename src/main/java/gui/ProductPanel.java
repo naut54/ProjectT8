@@ -225,23 +225,23 @@ public class ProductPanel extends JPanel {
         table.setColumnSelectionAllowed(false);
         JTableHeader header = table.getTableHeader();
         utils.Styles.setTableStyle(table, header,
-                MENU_COLOR,                    // backgroundColor
-                FONT_COLOR,                    // foregroundColor
-                new Font("Arial", Font.BOLD, 14), // font
-                30,                            // headerHeight
-                SwingConstants.CENTER          // alignment
+                MENU_COLOR,
+                FONT_COLOR,
+                new Font("Arial", Font.BOLD, 14),
+                30,
+                SwingConstants.CENTER
         );
 
         utils.Styles.setRowStyle(table,
-                Color.WHITE,                   // evenRowColor
-                new Color(245, 245, 245),     // oddRowColor
-                new Color(40, 167, 69),       // activeTextColor
-                new Color(220, 53, 69),       // inactiveTextColor
-                Color.BLACK,                   // defaultTextColor
-                40,                           // rowHeight
-                new Color(230, 230, 230),     // borderColor
-                6,                            // statusColumn (la columna "Estado" es la 6)
-                SwingConstants.CENTER         // alignment
+                Color.WHITE,
+                new Color(245, 245, 245),
+                new Color(40, 167, 69),
+                new Color(220, 53, 69),
+                Color.BLACK,
+                40,
+                new Color(230, 230, 230),
+                6,
+                SwingConstants.CENTER
         );
         table.getTableHeader().setReorderingAllowed(false);
 
