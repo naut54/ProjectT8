@@ -129,14 +129,35 @@ public class StockPanel extends JPanel {
         Object[][] buttonConfigs = {
                 {"Actualizar Stock", (Runnable) () -> updateList(query)},
                 {"Modificar Stock", (Runnable) () -> {
-                    Sale selected = getSelectedStock();
-                    if (selected == null) {
+                    int selectedRow = table.getSelectedRow();
+                    if (selectedRow == -1) {
                         JOptionPane.showMessageDialog(this,
-                                "Por favor, seleccione un articulo de stock primero",
+                                "Por favor, seleccione un artículo de stock primero",
                                 "Advertencia",
                                 JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        mainWindow.showPanel("stockModify", selected);
+                        return;
+                    }
+
+                    try {
+                        Object idProductoObj = table.getValueAt(selectedRow, 0);
+                        Object cantidadObj = table.getValueAt(selectedRow, 3);
+
+                        if (idProductoObj == null || cantidadObj == null) {
+                            throw new Exception("Datos de la tabla inválidos");
+                        }
+
+                        int idProducto = Integer.parseInt(idProductoObj.toString());
+                        int cantidad = Integer.parseInt(cantidadObj.toString());
+
+                        Sale selectedSale = new Sale(idProducto, cantidad, 0.0);
+
+                        mainWindow.showPanel("editStock", selectedSale);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this,
+                                "Error al procesar la selección: " + e.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }},
                 {"Vaciar Stock", (Runnable) () -> {

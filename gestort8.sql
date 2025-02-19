@@ -1,11 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 17-02-2025 a las 00:00:10
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,6 +36,29 @@ INSERT INTO `categorias_tbl` (`idCategoria`, `sNombre`, `sDescripcion`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `detalle_ventas_tbl`
+--
+
+CREATE TABLE `detalle_ventas_tbl` (
+  `idDetalle` int(11) NOT NULL,
+  `idVenta` int(11) NOT NULL,
+  `idProducto` int(11) NOT NULL,
+  `iCantidad` int(11) DEFAULT NULL,
+  `dPrecio` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_ventas_tbl`
+--
+
+INSERT INTO `detalle_ventas_tbl` (`idDetalle`, `idVenta`, `idProducto`, `iCantidad`, `dPrecio`) VALUES
+(1, 1, 3, 2, 800.00),
+(2, 4, 1, 1, 800.00),
+(3, 4, 2, 1, 600.00);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `productos_tbl`
 --
 
@@ -63,7 +78,7 @@ CREATE TABLE `productos_tbl` (
 
 INSERT INTO `productos_tbl` (`idProducto`, `sNombre`, `sDescripcion`, `dPrecio`, `iCodigoProducto`, `idCategoria`, `bActivo`) VALUES
 (1, 'Test1', 'Descripcion', 800.00, 4001, 1, 1),
-(2, 'Test2', 'Descripcion', 600.00, 4002, 1, 1),
+(2, 'Test2', 'Descripcion', 600.00, 4002, 2, 1),
 (3, 'Test3', 'Desc', 500.60, 4003, 1, 1),
 (4, 'Test4', 'Desc', 800.00, 4004, 1, 1);
 
@@ -86,10 +101,30 @@ CREATE TABLE `stock_tbl` (
 INSERT INTO `stock_tbl` (`idStock`, `idProducto`, `iCantidad`) VALUES
 (1, 1, 0),
 (2, 2, 0),
-(6, 6, 0),
-(7, 3, 0),
-(8, 5, 0),
-(9, 4, 0);
+(3, 3, 0),
+(4, 4, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ventas_tbl`
+--
+
+CREATE TABLE `ventas_tbl` (
+  `idVenta` int(11) NOT NULL,
+  `sFecha` date DEFAULT curdate(),
+  `dTotal` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas_tbl`
+--
+
+INSERT INTO `ventas_tbl` (`idVenta`, `sFecha`, `dTotal`) VALUES
+(1, '2025-02-17', 1500.00),
+(2, '2025-02-17', 800.00),
+(3, '2025-02-17', 400.00),
+(4, '2025-02-18', 1400.00);
 
 --
 -- Índices para tablas volcadas
@@ -100,6 +135,18 @@ INSERT INTO `stock_tbl` (`idStock`, `idProducto`, `iCantidad`) VALUES
 --
 ALTER TABLE `categorias_tbl`
   ADD PRIMARY KEY (`idCategoria`);
+
+--
+-- Indices de la tabla `detalle_ventas_tbl`
+--
+ALTER TABLE `detalle_ventas_tbl`
+  ADD PRIMARY KEY (`idDetalle`);
+
+--
+-- Indices de la tabla `imagenes_tbl`
+--
+ALTER TABLE `imagenes_tbl`
+  ADD PRIMARY KEY (`idImagen`);
 
 --
 -- Indices de la tabla `productos_tbl`
@@ -115,6 +162,12 @@ ALTER TABLE `stock_tbl`
   ADD PRIMARY KEY (`idStock`);
 
 --
+-- Indices de la tabla `ventas_tbl`
+--
+ALTER TABLE `ventas_tbl`
+  ADD PRIMARY KEY (`idVenta`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -123,6 +176,18 @@ ALTER TABLE `stock_tbl`
 --
 ALTER TABLE `categorias_tbl`
   MODIFY `idCategoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_ventas_tbl`
+--
+ALTER TABLE `detalle_ventas_tbl`
+  MODIFY `idDetalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `imagenes_tbl`
+--
+ALTER TABLE `imagenes_tbl`
+  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `productos_tbl`
@@ -135,6 +200,12 @@ ALTER TABLE `productos_tbl`
 --
 ALTER TABLE `stock_tbl`
   MODIFY `idStock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas_tbl`
+--
+ALTER TABLE `ventas_tbl`
+  MODIFY `idVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

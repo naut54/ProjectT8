@@ -199,7 +199,6 @@ public class EditProduct extends JPanel {
     public void setData(Object[] args) {
         if (args.length > 0 && args[0] instanceof Product) {
             Product product = (Product) args[0];
-            // Cambiar el título a "Editar Producto"
             Component[] components = getComponents();
             for (Component component : components) {
                 if (component instanceof JLabel && ((JLabel) component).getText().contains("Añadir")) {
@@ -218,7 +217,6 @@ public class EditProduct extends JPanel {
             priceField.setText(String.valueOf(product.getPrice()));
             descriptionArea.setText(product.getDescription());
 
-            // Para el combobox de categoría
             try {
                 ArrayList<String> params = new ArrayList<>();
                 params.add(String.valueOf(product.getIdCategory()));
@@ -246,27 +244,22 @@ public class EditProduct extends JPanel {
         try {
             Product product = setProduct();
 
-            // Verificar si es una edición o una inserción nueva
             String checkExisting = "SELECT COUNT(*) FROM productos_tbl WHERE iCodigoProducto = ?";
             ArrayList<String> checkParams = new ArrayList<>();
             checkParams.add(String.valueOf(product.getProductCode()));
             int exists = DataAccessObject.executeSingleIntQuery(checkExisting, checkParams);
 
             if (exists > 0) {
-                // Es una edición - hacer UPDATE
                 ArrayList<String> values = new ArrayList<>() {{
                     add(product.getName());
                     add(product.getDescription());
                     add(String.valueOf(product.getPrice()));
                     add(String.valueOf(product.getIdCategory()));
-                    add(String.valueOf(product.getProductCode())); // Para el WHERE
+                    add(String.valueOf(product.getProductCode()));
                 }};
 
                 String updateQuery = "UPDATE productos_tbl SET sNombre = ?, sDescripcion = ?, dPrecio = ?, idCategoria = ? WHERE iCodigoProducto = ?";
                 DataAccessObject.executeQueryValues(updateQuery, values);
-            } else {
-                // Es una inserción nueva - mantener el código existente de INSERT
-                // ... (tu código actual de INSERT)
             }
 
             JOptionPane.showMessageDialog(this,

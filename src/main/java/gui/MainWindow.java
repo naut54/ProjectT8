@@ -51,16 +51,20 @@ public class MainWindow extends JFrame {
         contentPanel.add(new SalesPanel(this), "salesPanel");
         contentPanel.add(new AddSale(this), "addSale");
         contentPanel.add(new StockPanel(this), "stockPanel");
+        contentPanel.add(new EditStock(this), "editStock");
 
         cardLayout.show(contentPanel, "main");
         pack();
     }
 
     public void showPanel(String panelName, Object... args) {
-        if (args.length > 0 && panelName.equals("editProduct")) {
+        if (args.length > 0) {
             for (Component comp : contentPanel.getComponents()) {
-                if (comp instanceof EditProduct editPanel) {
+                if (panelName.equals("editProduct") && comp instanceof EditProduct editPanel) {
                     editPanel.setData(args);
+                    break;
+                } else if (panelName.equals("editStock") && comp instanceof EditStock editStockPanel) {
+                    editStockPanel.setData(args);
                     break;
                 }
             }
