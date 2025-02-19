@@ -74,8 +74,12 @@ public class MainPanel extends JPanel {
         Object[][] quickAccessButtons = {
                 {"Nuevo Producto", (Runnable) () -> mainWindow.showPanel("addProduct")},
                 {"Nueva Venta", (Runnable) () -> mainWindow.showPanel("addSale")},
-                {"Actualizar Stock", (Runnable) () -> mainWindow.showPanel("addProduct")},
-                {"Nueva Categoria", (Runnable) () -> mainWindow.showPanel("addProduct")},
+                {"Actualizar Stock", (Runnable) () -> {
+                    JOptionPane.showMessageDialog(this, "Stock actualizado con exito", "Stock Actualizado", JOptionPane.INFORMATION_MESSAGE);
+                }},
+                {"Nueva Categoria", (Runnable) () -> {
+                    JOptionPane.showMessageDialog(this, "Opcion no disponible", "No disponible", JOptionPane.ERROR_MESSAGE);
+                }},
         };
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -196,7 +200,7 @@ public class MainPanel extends JPanel {
             }
             case "Categorías" -> {
                 System.out.println("Abriendo módulo de categorías");
-                mainWindow.showPanel("addProduct");
+                mainWindow.showPanel("inProgress");
             }
             default -> System.out.println("Módulo no reconocido");
         }

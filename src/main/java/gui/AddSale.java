@@ -21,7 +21,7 @@ public class AddSale extends JPanel {
     private JLabel subtotalLabel;
     private JLabel ivaLabel;
     private JLabel totalLabel;
-    private ArrayList<Sale> carrito;
+    private ArrayList<Sale> cart;
     private double subtotal = 0.0;
     private double iva = 0.0;
     private double total = 0.0;
@@ -31,7 +31,7 @@ public class AddSale extends JPanel {
             throw new IllegalArgumentException("MainWindow no puede ser null");
         }
         this.mainWindow = mainWindow;
-        this.carrito = new ArrayList<>();
+        this.cart = new ArrayList<>();
         initializePanel();
         createComponents();
         setupStyles();
@@ -106,7 +106,7 @@ public class AddSale extends JPanel {
         JButton cancelButton = Styles.createStyledButton("Cancelar", new Color(231, 76, 60), 180, 10, new Color(70, 83, 97));
 
         registerButton.addActionListener(e -> registrarVenta());
-        cancelButton.addActionListener(e -> mainWindow.showPanel("ventas"));
+        cancelButton.addActionListener(e -> mainWindow.showPanel("salesPanel"));
 
         buttonPanel.add(registerButton);
         buttonPanel.add(cancelButton);

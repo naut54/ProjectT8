@@ -110,7 +110,7 @@ public class Product {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(
                      "INSERT INTO productos_tbl (`sNombre`, `sDescripcion`, `dPrecio`, `iCodigoProducto`, `idCategoria`) VALUES (?, ?, ?, ?, ?)",
-                     Statement.RETURN_GENERATED_KEYS // IMPORTANTE: para recuperar la clave generada
+                     Statement.RETURN_GENERATED_KEYS
              )) {
 
             for (int i = 0; i < values.size(); i++) {

@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
         contentPanel.add(new AddSale(this), "addSale");
         contentPanel.add(new StockPanel(this), "stockPanel");
         contentPanel.add(new EditStock(this), "editStock");
+        contentPanel.add(new InProgress(this), "inProgress");
 
         cardLayout.show(contentPanel, "main");
         pack();
@@ -68,6 +69,9 @@ public class MainWindow extends JFrame {
                     break;
                 }
             }
+        }
+        if (contentPanel instanceof InProgress) {
+            ((InProgress) contentPanel).dispose();
         }
         cardLayout.show(contentPanel, panelName);
         pack();

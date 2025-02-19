@@ -131,11 +131,9 @@ public class Styles {
                 Component c = super.getTableCellRendererComponent(table, value,
                         isSelected, hasFocus, row, column);
 
-                // Verifica si la alineación es válida
                 if (alignment == SwingConstants.LEFT || alignment == SwingConstants.CENTER || alignment == SwingConstants.RIGHT) {
                     setHorizontalAlignment(alignment);
                 } else {
-                    // Usa una alineación predeterminada en caso de valor inválido
                     setHorizontalAlignment(SwingConstants.LEFT);
                 }
 
