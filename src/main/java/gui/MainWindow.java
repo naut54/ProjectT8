@@ -22,9 +22,9 @@ public class MainWindow extends JFrame {
         setMinimumSize(new Dimension(800, 600));
         setResizable(false);
 
-//        ImageIcon icon = new ImageIcon(getIconBytes());
-//        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-//        setIconImage(image);
+        ImageIcon icon = new ImageIcon(getIconBytes());
+        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        setIconImage(image);
 
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
 
     private byte[] getIconBytes() throws SQLException {
         try {
-            String query = "SELECT pixel FROM imagenes_tbl WHERE nombre LIKE 'icono'";
+            String query = "SELECT imagen FROM imagenes_tbl WHERE idImagen LIKE '1'";
 
             return DataAccessObject.executeQueryBytes(query);
         } catch (SQLException e) {
@@ -50,6 +50,7 @@ public class MainWindow extends JFrame {
         contentPanel.add(new EditProduct(this), "editProduct");
         contentPanel.add(new SalesPanel(this), "salesPanel");
         contentPanel.add(new AddSale(this), "addSale");
+        contentPanel.add(new StockPanel(this), "stockPanel");
 
         cardLayout.show(contentPanel, "main");
         pack();

@@ -191,6 +191,20 @@ public class Sale {
         return item;
     }
 
+    public static String searchSaleStock(String query) throws SQLException {
+        ArrayList<String> params = new ArrayList<>();
+        params.add("%" + query + "%");
+        params.add("%" + query + "%");
+
+        String stmt = "SELECT s.idProducto, p.sNombre AS productName, c.sNombre AS categoryName, s.iCantidad " +
+                "FROM stock_tbl s " +
+                "JOIN productos_tbl p ON s.idProducto = p.idProducto " +
+                "JOIN categorias_tbl c ON p.idCategoria = c.idCategoria " +
+                "WHERE p.sNombre LIKE ? OR c.sNombre LIKE ?";
+
+        return DataAccessObject.executeQueryValues(stmt, params);
+    }
+
     public static String searchSale(String query) throws SQLException {
         ArrayList<String> params = new ArrayList<>();
         params.add("%" + query + "%");
@@ -214,8 +228,6 @@ public class Sale {
                         "GROUP BY " +
                         "    v.idVenta, v.sFecha, v.dTotal";
 
-        String resultado = DataAccessObject.executeQueryValues(sqlQuery, params);
-        System.out.println("Resultado de la búsqueda: " + resultado);
-        return resultado;
+        return DataAccessObject.executeQueryValues(sqlQuery, params);
     }
 }

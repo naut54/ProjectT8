@@ -96,7 +96,6 @@ public class ProductPanel extends JPanel {
     private void createQuickAccessPanel() {
         quickAccessPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        Product data = getSelectedProduct();
 
         Object[][] buttonConfigs = {
                 {"Nuevo Producto", (Runnable) () -> mainWindow.showPanel("addProduct")},

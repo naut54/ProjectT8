@@ -74,10 +74,8 @@ public class MainPanel extends JPanel {
         Object[][] quickAccessButtons = {
                 {"Nuevo Producto", (Runnable) () -> mainWindow.showPanel("addProduct")},
                 {"Nueva Venta", (Runnable) () -> mainWindow.showPanel("addSale")},
-                {"Generar Factura", (Runnable) () -> mainWindow.showPanel("addProduct")},
                 {"Actualizar Stock", (Runnable) () -> mainWindow.showPanel("addProduct")},
                 {"Nueva Categoria", (Runnable) () -> mainWindow.showPanel("addProduct")},
-                {"Consulta Rapida", (Runnable) () -> mainWindow.showPanel("addProduct")}
         };
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -191,7 +189,7 @@ public class MainPanel extends JPanel {
                 mainWindow.showPanel("products");
             }
             case "Stock" -> {
-                System.out.println("Abriendo módulo de stock");
+                mainWindow.showPanel("stockPanel");
             }
             case "Ventas" -> {
                 mainWindow.showPanel("salesPanel");

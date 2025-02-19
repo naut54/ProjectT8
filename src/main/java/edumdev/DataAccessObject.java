@@ -2,7 +2,6 @@ package edumdev;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class DataAccessObject {
     private static final String ERRORMSG = "Error: ";
@@ -225,6 +224,17 @@ public class DataAccessObject {
         }
     }
 
+    /**
+     * Ejecuta una consulta SQL SELECT sin parámetros y recupera un único resultado en forma de un arreglo de bytes.
+     * <p>
+     * Este método está diseñado para obtener datos binarios (por ejemplo, imágenes almacenadas en la base de datos).
+     * La columna que contiene los datos binarios debe llamarse "imagen".
+     *
+     * @param query la consulta SQL SELECT a ejecutar. Debe ser una consulta SELECT válida.
+     * @return un arreglo de bytes que contiene los datos recuperados de la columna "imagen".
+     * @throws SQLException si la consulta no es una instrucción SELECT, si no se puede establecer conexión con la base de datos,
+     *                      si no se encuentra un resultado adecuado, o si ocurre un error durante la ejecución.
+     */
     public static byte[] executeQueryBytes(String query) throws SQLException {
         if (!query.trim().toUpperCase().startsWith("SELECT")) {
             throw new SQLException("Este método solo admite consultas SELECT.");
@@ -237,7 +247,7 @@ public class DataAccessObject {
             try (PreparedStatement pstmt = conn.prepareStatement(query);
                  ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getBytes("pixel");
+                    return rs.getBytes("imagen");
                 }
                 throw new SQLException("No se encontró el icono en la base de datos.");
             }
@@ -277,5 +287,71 @@ public class DataAccessObject {
         }
 
         throw new SQLException("No se encontró el resultado para la consulta: " + query);
+    }
+
+    /**
+     * Ejecuta una consulta SQL de actualización, inserción o eliminación con parámetros especificados
+     * y devuelve el número de filas afectadas como resultado.
+     *
+     * @param query  La consulta SQL a ejecutar. No debe ser nula o vacía.
+     * @param params Una lista de parámetros que se sustituirán en los placeholders de la consulta SQL.
+     * @return El número de filas afectadas por la consulta.
+     * @throws IllegalArgumentException Si la consulta es nula o vacía, si los parámetros son nulos,
+     *                                  o si el número de parámetros no coincide con el número de placeholders en la consulta.
+     * @throws SQLException             Si ocurre un error al acceder o actualizar la base de datos.
+     *
+     *                                  <h3>Ejemplo de uso:</h3>
+     *                                  <pre>
+     *                                  {@code
+     *                                  ArrayList<String> params = new ArrayList<>();
+     *                                  params.add("nuevoValor");
+     *                                  params.add("1");
+     *
+     *                                  String query = "UPDATE mi_tabla SET columna = ? WHERE id = ?";
+     *
+     *                                  try {
+     *                                      int filasAfectadas = DataAccessObject.executeUpdate(query, params);
+     *                                      System.out.println("Filas afectadas: " + filasAfectadas);
+     *                                  } catch (SQLException e) {
+     *                                      System.err.println("Error al ejecutar la actualización: " + e.getMessage());
+     *                                  }
+     *                                  }
+     *                                  </pre>
+     *
+     * @since 16
+     */
+    public static int executeUpdate(String query, ArrayList<String> params) throws SQLException {
+        int rowsAffected;
+        if (query == null || query.trim().isEmpty()) {
+            throw new IllegalArgumentException("La consulta SQL no puede ser nula o vacía.");
+        }
+        if (params == null) {
+            throw new IllegalArgumentException("Los parámetros no pueden ser nulos.");
+        }
+
+        long placeholdersCount = query.chars().filter(ch -> ch == '?').count();
+        if (params.size() != placeholdersCount) {
+            throw new IllegalArgumentException("El número de parámetros no coincide con los placeholders en la consulta.");
+        }
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            if (conn == null) {
+                throw new SQLException("No se pudo obtener la conexión a la base de datos.");
+            }
+
+            for (int i = 0; i < params.size(); i++) {
+                pstmt.setString(i + 1, params.get(i));
+            }
+
+            rowsAffected = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocurrió un error inesperado al ejecutar la actualización.", e);
+        }
+
+        return rowsAffected;
     }
 }

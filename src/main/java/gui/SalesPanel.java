@@ -1,6 +1,5 @@
 package gui;
 
-import models.Product;
 import models.Sale;
 import utils.Styles;
 import utils.Validate;
@@ -23,7 +22,7 @@ public class SalesPanel extends JPanel {
     private String query = "";
     private JPanel searchPanel;
     private JPanel quickAccessPanel;
-    private JPanel productDetailsPanel;
+    private JPanel salesDetailsPanel;
     private final Color MENU_COLOR = new Color(52, 73, 94);
     private final Color FONT_COLOR = new Color(255, 255, 255);
     private DefaultTableModel model = new DefaultTableModel();
@@ -96,7 +95,7 @@ public class SalesPanel extends JPanel {
     }
 
     private void createSalesDetailsPanel(Object[][] data) throws SQLException {
-        productDetailsPanel = new JPanel(new GridBagLayout());
+        salesDetailsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
          this.model = new DefaultTableModel(columnNames, 0){
@@ -151,7 +150,7 @@ public class SalesPanel extends JPanel {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        productDetailsPanel.add(scrollPane, gbc);
+        salesDetailsPanel.add(scrollPane, gbc);
     }
 
     private Sale getSelectedSale() {
@@ -198,8 +197,6 @@ public class SalesPanel extends JPanel {
             }
 
             Object[][] data = convertStringToArray(searchResults);
-
-            System.out.println( Arrays.deepToString( data ));
 
             model.setRowCount(0);
             for (Object[] row : data) {
@@ -283,7 +280,7 @@ public class SalesPanel extends JPanel {
         gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 0.8;
-        add(productDetailsPanel, gbc);
+        add(salesDetailsPanel, gbc);
     }
 
     private void setupStyles() {
