@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-02-2025 a las 20:30:39
--- Versión del servidor: 10.4.32-MariaDB
+-- Tiempo de generación: 20-02-2025 a las 23:42:37
+-- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -31,7 +31,7 @@ CREATE TABLE `categorias_tbl` (
   `idCategoria` int(11) NOT NULL,
   `sNombre` varchar(64) NOT NULL,
   `sDescripcion` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `categorias_tbl`
@@ -53,7 +53,7 @@ CREATE TABLE `detalle_ventas_tbl` (
   `idProducto` int(11) NOT NULL,
   `iCantidad` int(11) DEFAULT NULL,
   `dPrecio` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `detalle_ventas_tbl`
@@ -74,7 +74,7 @@ CREATE TABLE `imagenes_tbl` (
   `idImagen` int(11) NOT NULL,
   `sTipo` varchar(255) NOT NULL,
   `imagen` longblob NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `imagenes_tbl`
@@ -97,17 +97,88 @@ CREATE TABLE `productos_tbl` (
   `iCodigoProducto` bigint(20) DEFAULT NULL,
   `idCategoria` int(11) NOT NULL,
   `bActivo` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `productos_tbl`
 --
 
 INSERT INTO `productos_tbl` (`idProducto`, `sNombre`, `sDescripcion`, `dPrecio`, `iCodigoProducto`, `idCategoria`, `bActivo`) VALUES
-(1, 'Test1', 'Descripcion', 800.00, 4001, 1, 1),
-(2, 'Test2', 'Descripcion', 600.00, 4002, 2, 1),
-(3, 'Test3', 'Desc', 500.60, 4003, 1, 1),
-(4, 'Test4', 'Desc', 800.00, 4004, 1, 1);
+(1, 'Intel Core i3-12100F', 'Procesador Intel Core i3 12va Gen, 4 núcleos, 3.3GHz', 129.99, 4005, 1, 1),
+(2, 'Intel Core i5-12400F', 'Procesador Intel Core i5 12va Gen, 6 núcleos, 2.5GHz', 199.99, 4006, 1, 1),
+(3, 'AMD Ryzen 5 5600X', 'Procesador AMD Ryzen 5, 6 núcleos, 3.7GHz', 229.99, 4007, 1, 1),
+(4, 'Intel Core i7-12700K', 'Procesador Intel Core i7 12va Gen, 12 núcleos, 3.6GHz', 419.99, 4008, 1, 1),
+(5, 'AMD Ryzen 7 5800X', 'Procesador AMD Ryzen 7, 8 núcleos, 3.8GHz', 349.99, 4009, 1, 1),
+(6, 'Intel Core i9-12900K', 'Procesador Intel Core i9 12va Gen, 16 núcleos, 3.2GHz', 589.99, 4010, 1, 1),
+(7, 'AMD Ryzen 9 5950X', 'Procesador AMD Ryzen 9, 16 núcleos, 3.4GHz', 749.99, 4011, 1, 1),
+(8, 'AMD Ryzen 5 7600X', 'Procesador AMD Ryzen 5 7000, 6 núcleos, 4.7GHz', 299.99, 4012, 1, 1),
+(9, 'Intel Core i5-13600K', 'Procesador Intel Core i5 13va Gen, 14 núcleos, 3.5GHz', 319.99, 4013, 1, 1),
+(10, 'AMD Ryzen 7 7700X', 'Procesador AMD Ryzen 7 7000, 8 núcleos, 4.5GHz', 449.99, 4014, 1, 1),
+(11, 'NVIDIA RTX 3060', 'Tarjeta gráfica RTX 3060 12GB GDDR6', 329.99, 4015, 2, 1),
+(12, 'AMD RX 6600 XT', 'Tarjeta gráfica RX 6600 XT 8GB GDDR6', 379.99, 4016, 2, 1),
+(13, 'NVIDIA RTX 3070', 'Tarjeta gráfica RTX 3070 8GB GDDR6', 499.99, 4017, 2, 1),
+(14, 'AMD RX 6700 XT', 'Tarjeta gráfica RX 6700 XT 12GB GDDR6', 479.99, 4018, 2, 1),
+(15, 'NVIDIA RTX 3080', 'Tarjeta gráfica RTX 3080 10GB GDDR6X', 699.99, 4019, 2, 1),
+(16, 'AMD RX 6800 XT', 'Tarjeta gráfica RX 6800 XT 16GB GDDR6', 649.99, 4020, 2, 1),
+(17, 'NVIDIA RTX 3090', 'Tarjeta gráfica RTX 3090 24GB GDDR6X', 1499.99, 4021, 2, 1),
+(18, 'AMD RX 6900 XT', 'Tarjeta gráfica RX 6900 XT 16GB GDDR6', 999.99, 4022, 2, 1),
+(19, 'NVIDIA RTX 4070', 'Tarjeta gráfica RTX 4070 12GB GDDR6X', 599.99, 4023, 2, 1),
+(20, 'AMD RX 7900 XT', 'Tarjeta gráfica RX 7900 XT 20GB GDDR6', 899.99, 4024, 2, 1),
+(21, 'Samsung 970 EVO Plus 500GB', 'SSD NVMe M.2 500GB', 79.99, 4025, 3, 1),
+(22, 'Crucial P2 1TB', 'SSD NVMe M.2 1TB', 89.99, 4026, 3, 1),
+(23, 'WD Black SN750 1TB', 'SSD NVMe M.2 1TB Gaming', 129.99, 4027, 3, 1),
+(24, 'Samsung 980 PRO 1TB', 'SSD NVMe PCIe 4.0 M.2 1TB', 179.99, 4028, 3, 1),
+(25, 'Crucial MX500 2TB', 'SSD SATA 2TB', 169.99, 4029, 3, 1),
+(26, 'Samsung 870 EVO 1TB', 'SSD SATA 1TB', 119.99, 4030, 3, 1),
+(27, 'WD Blue 2TB', 'SSD SATA 2TB', 159.99, 4031, 3, 1),
+(28, 'Corsair Force MP600 1TB', 'SSD NVMe PCIe 4.0 M.2 1TB', 169.99, 4032, 3, 1),
+(29, 'Seagate FireCuda 530 2TB', 'SSD NVMe PCIe 4.0 M.2 2TB', 299.99, 4033, 3, 1),
+(30, 'Kingston KC2500 1TB', 'SSD NVMe M.2 1TB', 149.99, 4034, 3, 1),
+(31, 'Corsair Vengeance LPX 16GB', 'RAM DDR4 3200MHz (2x8GB)', 79.99, 4035, 4, 1),
+(32, 'G.Skill Ripjaws V 32GB', 'RAM DDR4 3600MHz (2x16GB)', 149.99, 4036, 4, 1),
+(33, 'Crucial Ballistix 16GB', 'RAM DDR4 3600MHz RGB (2x8GB)', 89.99, 4037, 4, 1),
+(34, 'Kingston FURY Beast 32GB', 'RAM DDR4 3200MHz (2x16GB)', 139.99, 4038, 4, 1),
+(35, 'Corsair Dominator 32GB', 'RAM DDR5 5200MHz RGB (2x16GB)', 299.99, 4039, 4, 1),
+(36, 'G.Skill Trident Z 32GB', 'RAM DDR4 3600MHz RGB (2x16GB)', 169.99, 4040, 4, 1),
+(37, 'Crucial DDR5 32GB', 'RAM DDR5 4800MHz (2x16GB)', 259.99, 4041, 4, 1),
+(38, 'TeamGroup T-Force 16GB', 'RAM DDR4 3200MHz RGB (2x8GB)', 84.99, 4042, 4, 1),
+(39, 'Thermaltake TOUGHRAM 32GB', 'RAM DDR4 3600MHz RGB (2x16GB)', 179.99, 4043, 4, 1),
+(40, 'ADATA XPG 32GB', 'RAM DDR4 3200MHz (2x16GB)', 129.99, 4044, 4, 1),
+(41, 'ASUS ROG STRIX B550-F', 'Placa base AMD AM4 ATX', 189.99, 4045, 5, 1),
+(42, 'MSI MPG B550 GAMING EDGE', 'Placa base AMD AM4 ATX WiFi', 179.99, 4046, 5, 1),
+(43, 'Gigabyte Z690 AORUS ELITE', 'Placa base Intel LGA 1700 ATX', 269.99, 4047, 5, 1),
+(44, 'ASRock B450M PRO4', 'Placa base AMD AM4 Micro-ATX', 89.99, 4048, 5, 1),
+(45, 'ASUS TUF GAMING X570-PLUS', 'Placa base AMD AM4 ATX WiFi', 209.99, 4049, 5, 1),
+(46, 'MSI MAG B660 TOMAHAWK', 'Placa base Intel LGA 1700 ATX WiFi', 199.99, 4050, 5, 1),
+(47, 'Gigabyte B550 VISION D-P', 'Placa base AMD AM4 ATX', 259.99, 4051, 5, 1),
+(48, 'ASUS PRIME Z690-P', 'Placa base Intel LGA 1700 ATX', 219.99, 4052, 5, 1),
+(49, 'MSI PRO B660M-A', 'Placa base Intel LGA 1700 Micro-ATX', 149.99, 4053, 5, 1),
+(50, 'ASRock X570 Steel Legend', 'Placa base AMD AM4 ATX WiFi', 199.99, 4054, 5, 1),
+(51, 'Corsair K70 RGB', 'Teclado mecánico RGB Cherry MX Red', 159.99, 4055, 6, 1),
+(52, 'Logitech G Pro X', 'Teclado mecánico TKL RGB GX Blue', 149.99, 4056, 6, 1),
+(53, 'Razer BlackWidow V3', 'Teclado mecánico RGB Razer Green', 139.99, 4057, 6, 1),
+(54, 'HyperX Alloy Origins', 'Teclado mecánico RGB HyperX Red', 109.99, 4058, 6, 1),
+(55, 'Ducky One 2 Mini', 'Teclado mecánico 60% Cherry MX Brown', 99.99, 4059, 6, 1),
+(56, 'SteelSeries Apex Pro', 'Teclado mecánico RGB OmniPoint', 199.99, 4060, 6, 1),
+(57, 'ASUS ROG Strix Scope', 'Teclado mecánico RGB Cherry MX Red', 149.99, 4061, 6, 1),
+(58, 'Keychron K2', 'Teclado mecánico inalámbrico Gateron Brown', 89.99, 4062, 6, 1),
+(59, 'MSI Vigor GK50', 'Teclado mecánico RGB Kailh Box White', 79.99, 4063, 6, 1),
+(60, 'Drop CTRL', 'Teclado mecánico TKL RGB Cherry MX Clear', 199.99, 4064, 6, 1),
+(61, 'Logitech G Pro X Superlight', 'Mouse gaming inalámbrico 25K DPI', 149.99, 4065, 7, 1),
+(62, 'Razer DeathAdder V2', 'Mouse gaming 20K DPI', 69.99, 4066, 7, 1),
+(63, 'SteelSeries Prime', 'Mouse gaming inalámbrico 18K DPI', 129.99, 4067, 7, 1),
+(64, 'Corsair Dark Core RGB Pro', 'Mouse gaming inalámbrico 18K DPI', 79.99, 4068, 7, 1),
+(65, 'Glorious Model O', 'Mouse gaming ultraligero 12K DPI', 59.99, 4069, 7, 1),
+(66, 'Zowie EC2', 'Mouse gaming profesional 3200 DPI', 69.99, 4070, 7, 1),
+(67, 'HyperX Pulsefire Haste', 'Mouse gaming ultraligero 16K DPI', 49.99, 4071, 7, 1),
+(68, 'ASUS ROG Gladius III', 'Mouse gaming inalámbrico 26K DPI', 119.99, 4072, 7, 1),
+(69, 'Endgame Gear XM1r', 'Mouse gaming profesional 16K DPI', 79.99, 4073, 7, 1),
+(70, 'Roccat Kone Pro Air', 'Mouse gaming inalámbrico 19K DPI', 129.99, 4074, 7, 1),
+(71, 'Logitech MX Master 3', 'Mouse profesional inalámbrico', 99.99, 4075, 7, 1),
+(72, 'Microsoft Pro IntelliMouse', 'Mouse gaming clásico 16K DPI', 59.99, 4076, 7, 1),
+(73, 'Finalmouse Starlight-12', 'Mouse gaming ultraligero inalámbrico', 189.99, 4077, 7, 1),
+(74, 'Vaxee ZYGEN NP-01', 'Mouse gaming profesional ergonómico', 64.99, 4078, 7, 1),
+(75, 'Xtrfy M42', 'Mouse gaming RGB ultraligero', 59.99, 4079, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -119,17 +190,84 @@ CREATE TABLE `stock_tbl` (
   `idStock` int(11) NOT NULL,
   `idProducto` int(11) NOT NULL,
   `iCantidad` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `stock_tbl`
 --
 
 INSERT INTO `stock_tbl` (`idStock`, `idProducto`, `iCantidad`) VALUES
-(1, 1, 0),
-(2, 2, 10),
-(3, 3, 0),
-(4, 4, 0);
+(1, 5, 0),
+(2, 6, 0),
+(3, 7, 0),
+(4, 8, 0),
+(5, 9, 0),
+(6, 10, 0),
+(7, 11, 0),
+(8, 12, 0),
+(9, 13, 0),
+(10, 14, 0),
+(11, 15, 0),
+(12, 16, 0),
+(13, 17, 0),
+(14, 18, 0),
+(15, 19, 0),
+(16, 20, 0),
+(17, 21, 0),
+(18, 22, 0),
+(19, 23, 0),
+(20, 24, 0),
+(21, 25, 0),
+(22, 26, 0),
+(23, 27, 0),
+(24, 28, 0),
+(25, 29, 0),
+(26, 30, 0),
+(27, 31, 0),
+(28, 32, 0),
+(29, 33, 0),
+(30, 34, 0),
+(31, 35, 0),
+(32, 36, 0),
+(33, 37, 0),
+(34, 38, 0),
+(35, 39, 0),
+(36, 40, 0),
+(37, 41, 0),
+(38, 42, 0),
+(39, 43, 0),
+(40, 44, 0),
+(41, 45, 0),
+(42, 46, 0),
+(43, 47, 0),
+(44, 48, 0),
+(45, 49, 0),
+(46, 50, 0),
+(47, 51, 0),
+(48, 52, 0),
+(49, 53, 0),
+(50, 54, 0),
+(51, 55, 0),
+(52, 56, 0),
+(53, 57, 0),
+(54, 58, 0),
+(55, 59, 0),
+(56, 60, 0),
+(57, 61, 0),
+(58, 62, 0),
+(59, 63, 0),
+(60, 64, 0),
+(61, 65, 0),
+(62, 66, 0),
+(63, 67, 0),
+(64, 68, 0),
+(65, 69, 0),
+(66, 70, 0),
+(67, 71, 0),
+(68, 72, 0),
+(69, 73, 0),
+(70, 74, 0),
+(71, 75, 0);
 
 -- --------------------------------------------------------
 
@@ -141,7 +279,7 @@ CREATE TABLE `ventas_tbl` (
   `idVenta` int(11) NOT NULL,
   `sFecha` date DEFAULT curdate(),
   `dTotal` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `ventas_tbl`
@@ -220,13 +358,13 @@ ALTER TABLE `imagenes_tbl`
 -- AUTO_INCREMENT de la tabla `productos_tbl`
 --
 ALTER TABLE `productos_tbl`
-  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de la tabla `stock_tbl`
 --
 ALTER TABLE `stock_tbl`
-  MODIFY `idStock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idStock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_tbl`
