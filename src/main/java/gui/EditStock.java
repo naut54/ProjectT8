@@ -160,25 +160,45 @@ public class EditStock extends JPanel {
             try {
                 ArrayList<String> params = new ArrayList<>();
                 params.add(String.valueOf(currentStock.getIdProducto()));
-                String productInfo = DataAccessObject.executeQueryValues(
-                        "SELECT p.idProducto, p.sNombre, c.sNombre, s.iCantidad " +
-                                "FROM productos_tbl p " +
-                                "JOIN categorias_tbl c ON p.idCategoria = c.idCategoria " +
-                                "JOIN stock_tbl s ON p.idProducto = s.idProducto " +
-                                "WHERE p.iCodigoProducto = ?",
-                        params
-                );
+
+                String query = "SELECT CONCAT_WS('\t', " +
+                        "p.iCodigoProducto, " +
+                        "p.sNombre, " +
+                        "c.sNombre, " +
+                        "s.iCantidad) " +
+                        "FROM productos_tbl p " +
+                        "JOIN categorias_tbl c ON p.idCategoria = c.idCategoria " +
+                        "JOIN stock_tbl s ON p.idProducto = s.idProducto " +
+                        "WHERE p.idProducto = ?";
+
+                String productInfo = DataAccessObject.executeQueryValues(query, params);
 
                 if (!productInfo.isEmpty()) {
-                    String[] info = productInfo.trim().split("\\s+");
-                    productCodeField.setText(info[0]);
-                    productNameField.setText(info[1]);
-                    categoryField.setText(info[2]);
-                    currentStockField.setText(info[3]);
+                    String[] info = productInfo.trim().split("\t");
+
+                    if (info.length >= 4) {
+                        productCodeField.setText(info[0].trim());
+                        productNameField.setText(info[1].trim());
+                        categoryField.setText(info[2].trim());
+                        currentStockField.setText(info[3].trim());
+
+                        Color backgroundColor = new Color(240, 240, 240);
+                        productCodeField.setBackground(backgroundColor);
+                        productNameField.setBackground(backgroundColor);
+                        categoryField.setBackground(backgroundColor);
+                        currentStockField.setBackground(backgroundColor);
+                    } else {
+                        throw new IllegalArgumentException("Datos incompletos del producto");
+                    }
+                } else {
+                    throw new IllegalArgumentException("No se encontró información del producto");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                showError("Error al cargar la información del producto");
+                showError("Error al cargar la información del producto: " + e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                showError("Error inesperado: " + e.getMessage());
             }
         }
     }

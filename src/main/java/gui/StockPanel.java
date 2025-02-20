@@ -285,36 +285,21 @@ public class StockPanel extends JPanel {
             Object[][] result = new Object[rows.length][4];
 
             for (int i = 0; i < rows.length; i++) {
-                String row = rows[i];
+                String[] columns = rows[i].split("\t");
 
-                String[] parts = row.split("\\s+");
-                if (parts.length < 4) {
-                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1) + ": " + Arrays.toString(parts));
+                if (columns.length < 4) {
+                    throw new IllegalArgumentException("Fila " + (i + 1) + " incompleta. Se esperaban 4 columnas, se encontraron " + columns.length);
                 }
 
-                String codigo = parts[0];
-                String fecha = parts[1];
-                String cantidad = parts[2];
-                StringBuilder totalBuilder = new StringBuilder();
-                for (int j = 3; j < parts.length; j++) {
-                    totalBuilder.append(parts[j]);
-                    if (j + 1 < parts.length) {
-                        totalBuilder.append(" ");
-                    }
-                }
-                String total = totalBuilder.toString();
-
-                result[i][0] = codigo;
-                result[i][1] = fecha;
-                result[i][2] = cantidad;
-                result[i][3] = total;
+                result[i][0] = columns[0].trim();
+                result[i][1] = columns[1].trim();
+                result[i][2] = columns[2].trim();
+                result[i][3] = columns[3].trim();
             }
 
             return result;
-        } catch (IllegalArgumentException e) {
-            throw e;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error inesperado al procesar los datos: " + e.getMessage(), e);
+            throw new IllegalArgumentException("Error al procesar los datos: " + e.getMessage(), e);
         }
     }
 

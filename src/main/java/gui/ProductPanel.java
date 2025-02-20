@@ -268,31 +268,49 @@ public class ProductPanel extends JPanel {
 
     private Object[][] convertStringToArray(String data) {
         try {
-            String[] rows = data.split("\n");
-            Object[][] result = new Object[rows.length][8];
+            String[] rows = data.trim().split("\n");
+            Object[][] result = new Object[rows.length][7];
 
             for (int i = 0; i < rows.length; i++) {
-                String[] columns = rows[i].trim().split("\\s+", 7);
+                String row = rows[i].trim();
 
-                if (columns.length < 5) {
-                    throw new IllegalArgumentException("Datos incompletos en la fila " + (i + 1));
+                String[] parts = row.split("\\s+(?=\\d+(\\.\\d+)?\\s+\\d+\\s+\\d+\\s+\\d+$)");
+
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Formato incorrecto en la fila " + (i + 1));
                 }
 
                 try {
-                    result[i][0] = columns[4];
-                    result[i][1] = columns[1];
-                    result[i][2] = columns[2];
-                    result[i][3] = Double.parseDouble(columns[3]);
-                    result[i][4] = columns[5];
-                    result[i][5] = Product.checkStatus(columns[4]);
+                    String firstPart = parts[0].trim();
+                    String[] numericParts = parts[1].trim().split("\\s+");
+
+                    String[] nameDesc = firstPart.split("\\s+", 2);
+                    String nombre = nameDesc[0];
+                    String descripcion = nameDesc.length > 1 ? nameDesc[1] : "";
+
+                    double precio = Double.parseDouble(numericParts[0]);
+                    int codigoProducto = Integer.parseInt(numericParts[1]);
+                    int categoria = Integer.parseInt(numericParts[2]);
+                    int activo = Integer.parseInt(numericParts[3]);
+
+                    result[i][0] = codigoProducto;
+                    result[i][1] = nombre;
+                    result[i][2] = descripcion;
+                    result[i][3] = precio;
+                    result[i][4] = categoria;
+                    result[i][5] = activo;
                     result[i][6] = 0;
+
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Error procesando la fila " + (i+1) + ": " + e.getMessage());
+                    System.out.println("Error procesando valores en fila " + (i + 1) + ": " + e.getMessage());
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Error procesando la fila " + (i + 1) + ": " + e.getMessage());
                 }
             }
             return result;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Error en el formato de los números: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error general: " + e.getMessage());
+            throw new IllegalArgumentException("Error en el procesamiento de datos: " + e.getMessage());
         }
     }
 

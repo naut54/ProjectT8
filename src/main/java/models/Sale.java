@@ -196,7 +196,11 @@ public class Sale {
         params.add("%" + query + "%");
         params.add("%" + query + "%");
 
-        String stmt = "SELECT s.idProducto, p.sNombre AS productName, c.sNombre AS categoryName, s.iCantidad " +
+        String stmt = "SELECT CONCAT_WS('\t', " +
+                "s.idProducto, " +
+                "p.sNombre, " +
+                "c.sNombre, " +
+                "s.iCantidad) " +
                 "FROM stock_tbl s " +
                 "JOIN productos_tbl p ON s.idProducto = p.idProducto " +
                 "JOIN categorias_tbl c ON p.idCategoria = c.idCategoria " +
