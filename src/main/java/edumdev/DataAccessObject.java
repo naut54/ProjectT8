@@ -261,6 +261,7 @@ public class DataAccessObject {
      * Ejecuta una consulta SQL SELECT con parámetros especificados y recupera un único resultado de tipo double.
      * La consulta debe devolver exactamente una fila con una única columna que pueda ser convertida a double.
      *
+     *
      * @param query  la consulta SQL a ejecutar, debe ser una instrucción SELECT.
      * @param params una lista de parámetros que se sustituirán dinámicamente en la consulta.
      * @return el valor double devuelto por la consulta.
